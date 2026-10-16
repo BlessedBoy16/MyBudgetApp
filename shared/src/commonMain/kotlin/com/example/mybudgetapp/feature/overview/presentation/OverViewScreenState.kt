@@ -8,20 +8,15 @@ import kotlinx.datetime.todayIn
 import kotlin.time.Clock
 
 
-sealed class OverViewScreenState {
-    data class Content(
+data class OverViewScreenState (
         val expense: Expense? = null,
         val income: Income? = null,
         val totalAmount: Money? = null,
-        val transactions: List<Transaction>? = emptyList()
-    ) : OverViewScreenState()
-
-    data class UiState(
+        val transactions: List<Transaction>? = emptyList(),
         val isLoading: Boolean = true,
         val isRefreshing: Boolean = false,
         val selectedMonth: LocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
-    ) : OverViewScreenState()
-}
+)
 
 data class Transaction(
     val imgTransaction: String? = null,

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -27,6 +26,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mybudgetapp.core.ui.theme.BudgetTheme
+import com.example.mybudgetapp.core.ui.modifier.shimmer
+import com.example.mybudgetapp.feature.overview.presentation.components.FinanceCard
+import com.example.mybudgetapp.feature.overview.presentation.components.TransactionList
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -40,7 +42,7 @@ fun OverViewScreen(
 
 @Composable
 private fun Content(
-    state: OverViewScreenState.UiState,
+    state: OverViewScreenState,
 ) {
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.primaryContainer)) {
         Row(
@@ -77,7 +79,9 @@ private fun Content(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "12,870.50 $",
+                text = if (state.isLoading) "000 000,00" else state.totalAmount?.toString()
+                    .orEmpty(),
+                modifier = Modifier.shimmer(state.isLoading),
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onBackground,
             )
@@ -122,100 +126,19 @@ private fun Content(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                FinanceCard(modifier = Modifier.weight(1f))
-                FinanceCard(modifier = Modifier.weight(1f))
+                FinanceCard(modifier = Modifier.weight(1f), isLoading = state.isLoading)
+                FinanceCard(modifier = Modifier.weight(1f), isLoading = state.isLoading)
             }
-            TransactionList(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp))
-        }
-    }
-}
-
-@Composable
-fun TransactionList(modifier: Modifier = Modifier) {
-    Column(modifier = modifier) {
-        TransactionInfo()
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(count = 10) {
-                TransactionCard()
-            }
-        }
-    }
-}
-
-@Composable
-fun TransactionCard() {
-    Card() {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Box() {
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    CirclePlaceholder(text = "")
-                    Text(
-                        text = "Cafe",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-            }
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(text = "354.45$")
-                Text(text = "$4.567")
-            }
-        }
-    }
-}
-
-@Composable
-fun TransactionInfo() {
-    Column {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "Transaction",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "Monday, 12 January, 2026",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.tertiary
-            )
-            Text(
-                text = "Total $2,950",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onBackground
+            TransactionList(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
+                isLoading = state.isLoading,
             )
         }
     }
 }
 
 @Composable
-fun FinanceCard(modifier: Modifier = Modifier) {
-    Card(modifier) {
-        Column(
-            Modifier.fillMaxWidth().padding(8.dp)
-        ) {
-            CirclePlaceholder(text = "")
-            Spacer(Modifier.size(16.dp))
-            Text(text = "income")
-            Spacer(Modifier.size(8.dp))
-            Text(text = "$4,875.12")
-        }
-    }
-}
-
-@Composable
-private fun CirclePlaceholder(
+fun CirclePlaceholder(
     text: String,
     modifier: Modifier = Modifier,
 ) {
@@ -238,7 +161,15 @@ private fun CirclePlaceholder(
 fun OverViewScreenPrev() {
     BudgetTheme {
         Content(
-            state = OverViewScreenState.UiState()
+            state = OverViewScreenState()
         )
+    }
+}
+
+@Preview
+@Composable
+fun OverViewLoadingDarkPreview() {
+    BudgetTheme(darkTheme = true) {
+        Content(state = OverViewScreenState(isLoading = true))
     }
 }
