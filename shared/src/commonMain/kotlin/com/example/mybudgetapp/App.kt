@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.mybudgetapp.core.ui.theme.BudgetTheme
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.mybudgetapp.feature.overview.presentation.OverViewScreen
 import org.jetbrains.compose.resources.painterResource
 
 import mybudgetapp.shared.generated.resources.Res
@@ -24,7 +25,6 @@ import mybudgetapp.shared.generated.resources.compose_multiplatform
 @Preview
 fun App() {
     BudgetTheme {
-        var showContent by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.primaryContainer)
@@ -32,19 +32,7 @@ fun App() {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember {  }
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
-                }
-            }
+            OverViewScreen()
         }
     }
 }
