@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -33,7 +32,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun OverViewScreen(
-    viewModel: OverViewScreenViewModel = koinViewModel()
+    viewModel: OverviewScreenViewModel = koinViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -44,6 +43,7 @@ fun OverViewScreen(
 private fun Content(
     state: OverViewScreenState,
 ) {
+
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.primaryContainer)) {
         Row(
             modifier = Modifier
@@ -73,13 +73,12 @@ private fun Content(
             // Заглушка
             CirclePlaceholder(text = "●")
         }
-
         Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = if (state.isLoading) "000 000,00" else state.totalAmount?.toString()
+                text = if (state.isLoading) "000 000,00" else state.balance?.toString()
                     .orEmpty(),
                 modifier = Modifier.shimmer(state.isLoading),
                 style = MaterialTheme.typography.headlineMedium,

@@ -1,12 +1,13 @@
 package com.example.mybudgetapp.di
 
+import com.example.mybudgetapp.feature.overview.presentation.OverviewScreenViewModel
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-    // Здесь будем регистрировать зависимости.
-
+    viewModel { OverviewScreenViewModel() }
 }
 
 fun initKoin(
